@@ -5,6 +5,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import org.bai.security.library.domain.Message;
 
+/* TODO delete */
 @Path("/hello-world")
 public class HelloResource {
 
@@ -14,9 +15,4 @@ public class HelloResource {
         return new Message("Hello, World!");
     }
 
-//    @GET()
-//    @Produces({"application/json"})
-//    public String hello() {
-//        return "Hello, World!";
-//    }
 }
