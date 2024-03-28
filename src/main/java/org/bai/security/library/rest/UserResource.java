@@ -5,7 +5,7 @@ import jakarta.ws.rs.*;
 import lombok.NonNull;
 import org.bai.security.library.api.users.UserDto;
 import org.bai.security.library.domain.user.UserRepository;
-import org.bai.security.library.entity.user.UserJdbcRepository;
+import org.bai.security.library.entity.user.UserEntityRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,7 +15,7 @@ public class UserResource {
     private final UserRepository userRepository;
 
     @Inject
-    public UserResource(final UserJdbcRepository userRepository) {
+    public UserResource(final UserEntityRepository userRepository) {
         this.userRepository = userRepository;
     }
 

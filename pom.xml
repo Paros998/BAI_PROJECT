@@ -17,9 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <jakarta.ee.version>10.0.0</jakarta.ee.version>
-
         <glassfish.version>3.1.2</glassfish.version>
-
         <weld-se.version>5.1.0.Final</weld-se.version>
 
         <junit.version>5.9.2</junit.version>
