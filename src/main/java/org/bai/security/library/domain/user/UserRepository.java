@@ -12,4 +12,6 @@ public interface UserRepository {
 
     List<UserDto> findByAll();
 
+    UUID saveUser(@NonNull UserDto userDto);
+
 }
