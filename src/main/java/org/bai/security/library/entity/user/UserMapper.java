@@ -16,4 +16,13 @@ public class UserMapper {
                 .enabled(entity.isEnabled())
                 .build();
     }
+
+    public static UserEntity toEntity(final @NonNull UserDto dto) {
+        return UserEntity.builder()
+                .username(dto.getUsername())
+                .password(dto.getPassword())
+                .roles(dto.getRoles())
+                .enabled(true)
+                .build();
+    }
 }

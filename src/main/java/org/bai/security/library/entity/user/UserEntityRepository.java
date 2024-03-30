@@ -14,6 +14,8 @@ import java.util.UUID;
 
 @ApplicationScoped
 public class UserEntityRepository implements UserRepository {
+    @Inject
+    private UserEntityPasswordCoder entityPasswordCoder;
 
     @Inject
     @RequestScoped
@@ -32,5 +34,21 @@ public class UserEntityRepository implements UserRepository {
                 .stream()
                 .map(UserMapper::toUserDto)
                 .toList();
+    }
+
+    @Override
+    public UUID saveUser(@NonNull UserDto userDto) {
+        var newUser = UserMapper.toEntity(userDto);
+        entityPasswordCoder.encodeEntity(newUser);
+
+        var transaction = em.getTransaction();
+        transaction.begin();
+
+        try {
+            em.persist(newUser);
+        } finally {
+            transaction.commit();
+        }
+        return newUser.getId();
     }
 }

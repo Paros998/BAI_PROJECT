@@ -28,6 +28,8 @@
         <hibernate-commons.version>6.0.6.Final</hibernate-commons.version>
         <postgresql.version>42.7.3</postgresql.version>
 
+        <codecs.version>1.16.0</codecs.version>
+
         <junit.version>5.9.2</junit.version>
 
         <lombok.version>1.18.30</lombok.version>
@@ -104,6 +106,13 @@
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
             <scope>runtime</scope>
+        </dependency>
+
+        <!-- Codecs -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${codecs.version}</version>
         </dependency>
 
         <!-- Lombok -->
