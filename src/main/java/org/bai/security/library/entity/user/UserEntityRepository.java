@@ -1,11 +1,11 @@
 package org.bai.security.library.entity.user;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import lombok.NonNull;
 import org.bai.security.library.api.users.UserDto;
-import org.bai.security.library.datasource.DataSourceConfig;
 import org.bai.security.library.domain.user.UserRepository;
 
 import java.util.List;
@@ -14,12 +14,10 @@ import java.util.UUID;
 
 @ApplicationScoped
 public class UserEntityRepository implements UserRepository {
-    private final EntityManager em;
 
     @Inject
-    public UserEntityRepository(final @NonNull DataSourceConfig dsc) {
-        this.em = dsc.getDefaultEM();
-    }
+    @RequestScoped
+    private EntityManager em;
 
     @Override
     public Optional<UserDto> findById(@NonNull UUID id) {
