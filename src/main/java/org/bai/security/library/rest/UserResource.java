@@ -20,7 +20,7 @@ public class UserResource {
     }
 
     @GET
-    @Path("")
+    @Path("/find")
     @Produces({"application/json"})
     public List<UserDto> getAllUsers() {
         return userRepository.findByAll();
