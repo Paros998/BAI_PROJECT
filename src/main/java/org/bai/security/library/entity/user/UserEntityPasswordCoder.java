@@ -3,7 +3,7 @@ package org.bai.security.library.entity.user;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.NonNull;
-import org.bai.security.library.security.PasswordEncoder;
+import org.bai.security.library.security.encoder.PasswordEncoder;
 
 @ApplicationScoped
 public class UserEntityPasswordCoder {

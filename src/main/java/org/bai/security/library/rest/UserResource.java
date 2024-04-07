@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import lombok.NonNull;
+import org.bai.security.library.api.users.RegisterRequest;
 import org.bai.security.library.api.users.UserDto;
 import org.bai.security.library.domain.user.UserRepository;
 import org.bai.security.library.entity.user.UserEntityRepository;
@@ -16,6 +17,9 @@ import java.util.UUID;
 public class UserResource {
     private final UserRepository userRepository;
 
+//    @Inject
+//    private UserRolePermissionChecker permissionChecker;
+
     @Inject
     public UserResource(final UserEntityRepository userRepository) {
         this.userRepository = userRepository;
@@ -25,13 +29,15 @@ public class UserResource {
     @Path("/find")
     @Produces(MediaType.APPLICATION_JSON)
     public List<UserDto> getAllUsers() {
-        return userRepository.findByAll();
+//        permissionChecker.checkPermission(UserRole.ADMIN);
+        return userRepository.findAll();
     }
 
     @GET
     @Path("/find/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     public UserDto getUserById(final @NonNull @PathParam("userId") UUID userId) {
+//        permissionChecker.checkPermission(UserRole.ADMIN);
         return userRepository.findById(userId).orElseThrow();
     }
 
@@ -40,6 +46,16 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public UUID createUser(final @NonNull @Valid UserDto userDto) {
+//        permissionChecker.checkPermission(UserRole.ADMIN);
         return userRepository.saveUser(userDto);
     }
+
+    @POST
+    @Path("/register")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public UUID register(final @NonNull @Valid RegisterRequest request) {
+        return userRepository.registerUser(request);
+    }
+
 }

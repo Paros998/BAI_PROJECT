@@ -4,6 +4,10 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.bai.security.library.api.users.UserDto;
+import org.bai.security.library.business.UserPrincipal;
+import org.bai.security.library.business.UserRole;
+
+import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserMapper {
@@ -24,5 +28,13 @@ public class UserMapper {
                 .roles(dto.getRoles())
                 .enabled(true)
                 .build();
+    }
+
+    public static UserPrincipal toPrincipal(final @NonNull UserDto dto) {
+        return new UserPrincipal(dto.getUserId(),
+                dto.getUsername(),
+                dto.isEnabled(),
+                dto.getRoles()
+        );
     }
 }
