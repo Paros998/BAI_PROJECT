@@ -18,12 +18,16 @@ import java.util.UUID;
 
 @ApplicationScoped
 public class UserEntityRepository implements UserRepository {
-    @Inject
-    private UserEntityPasswordCoder entityPasswordCoder;
+    private final UserEntityPasswordCoder entityPasswordCoder;
+
+    @RequestScoped
+    private final EntityManager em;
 
     @Inject
-    @RequestScoped
-    private EntityManager em;
+    public UserEntityRepository(final UserEntityPasswordCoder entityPasswordCoder, final EntityManager em) {
+        this.entityPasswordCoder = entityPasswordCoder;
+        this.em = em;
+    }
 
     @Override
     public Optional<UserDto> findById(final @NonNull UUID id) {

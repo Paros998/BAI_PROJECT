@@ -17,19 +17,34 @@ import java.util.stream.Collectors;
 @RequestScoped
 public class UserPermissionChecker {
 
-    @Inject
     @RequestScoped
-    private SecurityContext securityContext;
+    private final SecurityContext securityContext;
+
+    @Inject
+    public UserPermissionChecker(final SecurityContext securityContext) {
+        this.securityContext = securityContext;
+    }
 
     public void check() {
         try {
+            Method calledMethod = null;
             StackTraceElement callable = Thread.currentThread().getStackTrace()[3];
             String callableMethodName = callable.getMethodName();
             String callableClassName = callable.getClassName();
 
             Class clazz = Class.forName(callableClassName);
 
-            Method calledMethod = clazz.getMethod(callableMethodName);
+            Method[] declaredMethods = clazz.getDeclaredMethods();
+
+            for (var m: declaredMethods) {
+                if (m.getName().equals(callableMethodName)) {
+                    calledMethod = m;
+                }
+            }
+
+            if (calledMethod == null) {
+                throw new RuntimeException();
+            }
 
             RolesAllowed rolesAllowed = calledMethod.getAnnotation(RolesAllowed.class);
 
@@ -46,16 +61,15 @@ public class UserPermissionChecker {
                     );
                 }
 
-                rolesNeeded.forEach(role -> {
-                    if (!securityContext.isUserInRole(role)) {
-                        throw new WebApplicationException(
-                                Response.status(
-                                                HttpStatusError.FORBIDDEN.status(),
-                                                String.format("User doesn't have the required permission [%s],denying access.", role))
-                                        .build()
-                        );
-                    }
-                });
+                if (rolesNeeded.stream().noneMatch(securityContext::isUserInRole)) {
+                    throw new WebApplicationException(
+                            Response.status(
+                                            HttpStatusError.FORBIDDEN.status(),
+                                            String.format("User doesn't have one of the required permission [%s],denying access.", rolesNeeded))
+                                    .build()
+                    );
+                }
+
             }
         } catch (final WebApplicationException e) {
             throw e;

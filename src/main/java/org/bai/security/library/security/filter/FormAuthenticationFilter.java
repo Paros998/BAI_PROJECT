@@ -16,13 +16,14 @@ import org.bai.security.library.security.jwt.JwtExpire;
 import org.glassfish.jersey.server.ContainerRequest;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class FormAuthenticationFilter implements ContainerRequestFilter {
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
-    private static final String LOGIN_PATH = "/auth/login";
+    private static final String LOGIN_PATH = "auth/login";
 
     // temporary
     private static final String JWT_SECRET = "absfol7814lqmva7891294nn9asa783nr293urnq9adm38ry2";
@@ -42,6 +43,9 @@ public class FormAuthenticationFilter implements ContainerRequestFilter {
         }
 
         String urlPath = ((ContainerRequest) requestContext).getPath(true);
+        if (urlPath.endsWith("/")) {
+            urlPath = urlPath.substring(0, urlPath.length() - 1);
+        }
 
         if (Objects.equals(urlPath, LOGIN_PATH) && requestContext.getMethod().equals("POST")) {
 
@@ -58,10 +62,12 @@ public class FormAuthenticationFilter implements ContainerRequestFilter {
                             HashMap::putAll);
 
             String username = parameters.get(USERNAME);
+            username = URLDecoder.decode(username, StandardCharsets.UTF_8);
             username = username != null ? username : "";
             username = username.trim();
 
             String password = parameters.get(PASSWORD);
+            password = URLDecoder.decode(password, StandardCharsets.UTF_8);
             password = password != null ? password : "";
 
             UsernamePasswordCredential credential = new UsernamePasswordCredential(username, password);
