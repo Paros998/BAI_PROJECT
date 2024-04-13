@@ -20,7 +20,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class FormAuthenticationFilter implements ContainerRequestFilter {
-    private static final boolean POST_ONLY = true;
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
     private static final String LOGIN_PATH = "/auth/login";
@@ -44,56 +43,57 @@ public class FormAuthenticationFilter implements ContainerRequestFilter {
 
         String urlPath = ((ContainerRequest) requestContext).getPath(true);
 
-        if (POST_ONLY && !requestContext.getMethod().equals("POST") && !Objects.equals(urlPath, LOGIN_PATH)) {
-            return;
-        }
+        if (Objects.equals(urlPath, LOGIN_PATH) && requestContext.getMethod().equals("POST")) {
 
-        byte[] entity = requestContext.getEntityStream().readAllBytes();
+            byte[] entity = requestContext.getEntityStream().readAllBytes();
 
-        List<String> data = new ArrayList<>(List.of(new String(entity).split("&")));
+            List<String> data = new ArrayList<>(List.of(new String(entity).split("&")));
 
-        Map<String, String> parameters = data.stream()
-                .collect(HashMap::new,
-                        (m, param) -> {String[] paramData = param.split("=");m.put(paramData[0], paramData[1]);},
-                        HashMap::putAll);
+            Map<String, String> parameters = data.stream()
+                    .collect(HashMap::new,
+                            (m, param) -> {
+                                String[] paramData = param.split("=");
+                                m.put(paramData[0], paramData[1]);
+                            },
+                            HashMap::putAll);
 
-        String username = parameters.get(USERNAME);
-        username = username != null ? username : "";
-        username = username.trim();
+            String username = parameters.get(USERNAME);
+            username = username != null ? username : "";
+            username = username.trim();
 
-        String password = parameters.get(PASSWORD);
-        password = password != null ? password : "";
+            String password = parameters.get(PASSWORD);
+            password = password != null ? password : "";
 
-        UsernamePasswordCredential credential = new UsernamePasswordCredential(username, password);
+            UsernamePasswordCredential credential = new UsernamePasswordCredential(username, password);
 
-        CredentialValidationResult result = identityStore.validate(credential);
+            CredentialValidationResult result = identityStore.validate(credential);
 
-        if (result.getStatus() != CredentialValidationResult.Status.VALID) {
-            requestContext.abortWith(
-                    Response.status(HttpStatusError.UNAUTHORIZED.status())
-                            .entity("Invalid username or password.")
-                            .build());
-            return;
-        }
+            if (result.getStatus() != CredentialValidationResult.Status.VALID) {
+                requestContext.abortWith(
+                        Response.status(HttpStatusError.UNAUTHORIZED.status())
+                                .entity("Invalid username or password.")
+                                .build());
+                return;
+            }
 
-        UserPrincipal principal = (UserPrincipal) result.getCallerPrincipal();
+            UserPrincipal principal = (UserPrincipal) result.getCallerPrincipal();
 
-        try {
-            String accessToken = Jwts.builder()
-                    .setSubject(principal.getUsername())
-                    .claim("authorities", principal.getRoles())
-                    .claim("userId", principal.getId())
-                    .setIssuedAt(new Date())
-                    .setExpiration(new Date(System.currentTimeMillis() + JwtExpire.ACCESS_TOKEN.getAmount()))
-                    .signWith(Keys.hmacShaKeyFor(JWT_SECRET.getBytes(StandardCharsets.UTF_8)))
-                    .compact();
+            try {
+                String accessToken = Jwts.builder()
+                        .setSubject(principal.getUsername())
+                        .claim("authorities", principal.getRoles())
+                        .claim("userId", principal.getId())
+                        .setIssuedAt(new Date())
+                        .setExpiration(new Date(System.currentTimeMillis() + JwtExpire.ACCESS_TOKEN.getAmount()))
+                        .signWith(Keys.hmacShaKeyFor(JWT_SECRET.getBytes(StandardCharsets.UTF_8)))
+                        .compact();
 
-            requestContext.abortWith(Response.ok()
-                    .header("Authorization", "Bearer " + accessToken)
-                    .build());
-        } catch (final Exception e) {
-            requestContext.abortWith(Response.serverError().entity(e.getMessage()).build());
+                requestContext.abortWith(Response.ok()
+                        .header("Authorization", "Bearer " + accessToken)
+                        .build());
+            } catch (final Exception e) {
+                requestContext.abortWith(Response.serverError().entity(e.getMessage()).build());
+            }
         }
     }
-
 }
