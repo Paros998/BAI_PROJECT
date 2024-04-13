@@ -1,4 +1,4 @@
-package org.bai.security.library.business;
+package org.bai.security.library.security.context;
 
 import jakarta.security.enterprise.CallerPrincipal;
 import lombok.*;

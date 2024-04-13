@@ -8,7 +8,7 @@ import jakarta.persistence.NoResultException;
 import lombok.NonNull;
 import org.bai.security.library.api.users.RegisterRequest;
 import org.bai.security.library.api.users.UserDto;
-import org.bai.security.library.business.UserRole;
+import org.bai.security.library.security.context.UserRole;
 import org.bai.security.library.domain.user.UserRepository;
 
 import java.util.Collections;

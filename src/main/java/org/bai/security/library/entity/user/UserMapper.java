@@ -4,10 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.bai.security.library.api.users.UserDto;
-import org.bai.security.library.business.UserPrincipal;
-import org.bai.security.library.business.UserRole;
-
-import java.util.stream.Collectors;
+import org.bai.security.library.security.context.UserPrincipal;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserMapper {
