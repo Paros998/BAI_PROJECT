@@ -65,7 +65,8 @@ public class UserPermissionChecker {
                     throw new WebApplicationException(
                             Response.status(
                                             HttpStatusError.FORBIDDEN.status(),
-                                            String.format("User doesn't have one of the required permission [%s],denying access.", rolesNeeded))
+                                            String.format("User doesn't have one of the required permission [%s], denying access.",
+                                                    rolesNeeded))
                                     .build()
                     );
                 }
