@@ -4,31 +4,52 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import lombok.NonNull;
+import org.bai.security.library.api.users.RegisterRequest;
 import org.bai.security.library.api.users.UserDto;
+import org.bai.security.library.security.context.UserRole;
 import org.bai.security.library.domain.user.UserRepository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @ApplicationScoped
 public class UserEntityRepository implements UserRepository {
-    @Inject
-    private UserEntityPasswordCoder entityPasswordCoder;
+    private final UserEntityPasswordCoder entityPasswordCoder;
+
+    @RequestScoped
+    private final EntityManager em;
 
     @Inject
-    @RequestScoped
-    private EntityManager em;
+    public UserEntityRepository(final UserEntityPasswordCoder entityPasswordCoder, final EntityManager em) {
+        this.entityPasswordCoder = entityPasswordCoder;
+        this.em = em;
+    }
 
     @Override
-    public Optional<UserDto> findById(@NonNull UUID id) {
-        return Optional.of(em.find(UserEntity.class, id))
+    public Optional<UserDto> findById(final @NonNull UUID id) {
+        return Optional.ofNullable(em.find(UserEntity.class, id))
                 .map(UserMapper::toUserDto);
     }
 
     @Override
-    public List<UserDto> findByAll() {
+    public Optional<UserDto> findByUsername(final @NonNull String username) {
+        try {
+            return Optional.of(
+                    em.createQuery("select u from users u where u.username = :username", UserEntity.class)
+                            .setParameter("username", username)
+                            .getSingleResult()
+            ).map(UserMapper::toUserDto);
+        } catch (final NoResultException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public List<UserDto> findAll() {
         return em.createQuery("select u from users u", UserEntity.class)
                 .getResultList()
                 .stream()
@@ -37,7 +58,7 @@ public class UserEntityRepository implements UserRepository {
     }
 
     @Override
-    public UUID saveUser(@NonNull UserDto userDto) {
+    public UUID saveUser(final @NonNull UserDto userDto) {
         var newUser = UserMapper.toEntity(userDto);
         entityPasswordCoder.encodeEntity(newUser);
 
@@ -50,5 +71,16 @@ public class UserEntityRepository implements UserRepository {
             transaction.commit();
         }
         return newUser.getId();
+    }
+
+    @Override
+    public UUID registerUser(final @NonNull RegisterRequest request) {
+        UserDto newUser = UserDto.builder()
+                .username(request.getUsername())
+                .password(request.getPassword())
+                .roles(Collections.singleton(UserRole.USER.name()))
+                .enabled(true)
+                .build();
+        return saveUser(newUser);
     }
 }

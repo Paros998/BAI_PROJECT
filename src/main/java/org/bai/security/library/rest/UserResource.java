@@ -1,13 +1,16 @@
 package org.bai.security.library.rest;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import lombok.NonNull;
+import org.bai.security.library.api.users.RegisterRequest;
 import org.bai.security.library.api.users.UserDto;
 import org.bai.security.library.domain.user.UserRepository;
 import org.bai.security.library.entity.user.UserEntityRepository;
+import org.bai.security.library.security.permission.UserPermissionChecker;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,23 +18,29 @@ import java.util.UUID;
 @Path("/users")
 public class UserResource {
     private final UserRepository userRepository;
+    private final UserPermissionChecker userPermissionChecker;
 
     @Inject
-    public UserResource(final UserEntityRepository userRepository) {
+    public UserResource(final UserEntityRepository userRepository, UserPermissionChecker userPermissionChecker) {
         this.userRepository = userRepository;
+        this.userPermissionChecker = userPermissionChecker;
     }
 
     @GET
     @Path("/find")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMIN")
     public List<UserDto> getAllUsers() {
-        return userRepository.findByAll();
+        userPermissionChecker.check();
+        return userRepository.findAll();
     }
 
     @GET
     @Path("/find/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADMIN", "USER"})
     public UserDto getUserById(final @NonNull @PathParam("userId") UUID userId) {
+        userPermissionChecker.check();
         return userRepository.findById(userId).orElseThrow();
     }
 
@@ -39,7 +48,18 @@ public class UserResource {
     @Path("/new")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("ADMIN")
     public UUID createUser(final @NonNull @Valid UserDto userDto) {
+        userPermissionChecker.check();
         return userRepository.saveUser(userDto);
     }
+
+    @POST
+    @Path("/register")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public UUID register(final @NonNull @Valid RegisterRequest request) {
+        return userRepository.registerUser(request);
+    }
+
 }

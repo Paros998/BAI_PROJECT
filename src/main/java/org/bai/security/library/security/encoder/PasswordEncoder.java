@@ -1,4 +1,4 @@
-package org.bai.security.library.security;
+package org.bai.security.library.security.encoder;
 
 import lombok.NonNull;
 

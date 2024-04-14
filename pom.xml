@@ -17,6 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <jakarta.ee.version>10.0.0</jakarta.ee.version>
+        <jakarta.security.version>3.0.0</jakarta.security.version>
         <jakarta.xml.version>4.0.2</jakarta.xml.version>
         <javax.xml.version>2.3.1</javax.xml.version>
 
@@ -29,6 +30,10 @@
         <postgresql.version>42.7.3</postgresql.version>
 
         <codecs.version>1.16.0</codecs.version>
+        <apache-commons.version>3.12.0</apache-commons.version>
+        <jwt-api-version>0.11.5</jwt-api-version>
+
+        <snake-yaml.version>2.2</snake-yaml.version>
 
         <junit.version>5.9.2</junit.version>
 
@@ -47,6 +52,11 @@
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
             <version>${jakarta.xml.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.security.enterprise</groupId>
+            <artifactId>jakarta.security.enterprise-api</artifactId>
+            <version>${jakarta.security.version}</version>
         </dependency>
 
         <!-- Javax -->
@@ -72,6 +82,12 @@
             <groupId>org.glassfish.jersey.inject</groupId>
             <artifactId>jersey-cdi2-se</artifactId>
             <version>${glassfish.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.weld.se</groupId>
+                    <artifactId>weld-se-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Weld SE -->
@@ -108,11 +124,44 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- JWT -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${jwt-api-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${jwt-api-version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>${jwt-api-version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
         <!-- Codecs -->
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>${codecs.version}</version>
+        </dependency>
+
+        <!-- Snake Yaml -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>${snake-yaml.version}</version>
+        </dependency>
+
+        <!-- Apache -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${apache-commons.version}</version>
         </dependency>
 
         <!-- Lombok -->

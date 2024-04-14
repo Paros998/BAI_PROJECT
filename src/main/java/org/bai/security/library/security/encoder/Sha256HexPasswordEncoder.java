@@ -1,4 +1,4 @@
-package org.bai.security.library.security;
+package org.bai.security.library.security.encoder;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.NonNull;

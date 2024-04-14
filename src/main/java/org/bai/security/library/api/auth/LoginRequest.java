@@ -1,4 +1,4 @@
-package org.bai.security.library.api.users;
+package org.bai.security.library.api.auth;
 
 import lombok.*;
 
