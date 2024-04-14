@@ -9,9 +9,10 @@ import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.Response;
 import lombok.NonNull;
+import org.bai.security.library.AppProperties;
 import org.bai.security.library.api.common.HttpStatusError;
-import org.bai.security.library.security.context.UserPrincipal;
 import org.bai.security.library.security.DataSourceIdentityStore;
+import org.bai.security.library.security.context.UserPrincipal;
 import org.bai.security.library.security.jwt.JwtExpire;
 import org.glassfish.jersey.server.ContainerRequest;
 
@@ -20,13 +21,12 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+import static org.bai.security.library.security.filter.JwtAuthenticationFilter.JWT_SECRET_PROPERTY;
+
 public class FormAuthenticationFilter implements ContainerRequestFilter {
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
     private static final String LOGIN_PATH = "auth/login";
-
-    // temporary
-    private static final String JWT_SECRET = "absfol7814lqmva7891294nn9asa783nr293urnq9adm38ry2";
 
     private final DataSourceIdentityStore identityStore;
 
@@ -85,13 +85,14 @@ public class FormAuthenticationFilter implements ContainerRequestFilter {
             UserPrincipal principal = (UserPrincipal) result.getCallerPrincipal();
 
             try {
+                final String jwtSecret = AppProperties.getProperty(JWT_SECRET_PROPERTY);
                 String accessToken = Jwts.builder()
                         .setSubject(principal.getUsername())
                         .claim("authorities", principal.getRoles())
                         .claim("userId", principal.getId())
                         .setIssuedAt(new Date())
                         .setExpiration(new Date(System.currentTimeMillis() + JwtExpire.ACCESS_TOKEN.getAmount()))
-                        .signWith(Keys.hmacShaKeyFor(JWT_SECRET.getBytes(StandardCharsets.UTF_8)))
+                        .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8)))
                         .compact();
 
                 requestContext.abortWith(Response.ok()

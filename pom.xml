@@ -33,6 +33,8 @@
         <apache-commons.version>3.12.0</apache-commons.version>
         <jwt-api-version>0.11.5</jwt-api-version>
 
+        <snake-yaml.version>2.2</snake-yaml.version>
+
         <junit.version>5.9.2</junit.version>
 
         <lombok.version>1.18.30</lombok.version>
@@ -146,6 +148,13 @@
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>${codecs.version}</version>
+        </dependency>
+
+        <!-- Snake Yaml -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>${snake-yaml.version}</version>
         </dependency>
 
         <!-- Apache -->
