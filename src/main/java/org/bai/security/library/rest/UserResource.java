@@ -9,8 +9,9 @@ import lombok.NonNull;
 import org.bai.security.library.api.users.RegisterRequest;
 import org.bai.security.library.api.users.UserDto;
 import org.bai.security.library.domain.user.UserRepository;
-import org.bai.security.library.entity.user.UserEntityRepository;
-import org.bai.security.library.security.permission.UserPermissionChecker;
+import org.bai.security.library.entity.user.repository.UserEntityRepository;
+import org.bai.security.library.security.permission.checker.AppPermissionChecker;
+import org.bai.security.library.security.permission.checker.PermissionChecker;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,12 +19,13 @@ import java.util.UUID;
 @Path("/users")
 public class UserResource {
     private final UserRepository userRepository;
-    private final UserPermissionChecker userPermissionChecker;
+    private final PermissionChecker userPermissionChecker;
 
     @Inject
-    public UserResource(final UserEntityRepository userRepository, UserPermissionChecker userPermissionChecker) {
+    public UserResource(final @UserEntityRepository UserRepository userRepository,
+                        final @AppPermissionChecker PermissionChecker permissionChecker) {
         this.userRepository = userRepository;
-        this.userPermissionChecker = userPermissionChecker;
+        this.userPermissionChecker = permissionChecker;
     }
 
     @GET

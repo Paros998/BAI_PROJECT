@@ -1,4 +1,4 @@
-package org.bai.security.library.security.permission;
+package org.bai.security.library.security.permission.checker;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
@@ -14,8 +14,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@RequestScoped
-public class UserPermissionChecker {
+public class UserPermissionChecker implements PermissionChecker {
 
     @RequestScoped
     private final SecurityContext securityContext;
@@ -25,6 +24,7 @@ public class UserPermissionChecker {
         this.securityContext = securityContext;
     }
 
+    @Override
     public void check() {
         try {
             Method calledMethod = null;
@@ -32,7 +32,7 @@ public class UserPermissionChecker {
             String callableMethodName = callable.getMethodName();
             String callableClassName = callable.getClassName();
 
-            Class clazz = Class.forName(callableClassName);
+            Class<?> clazz = Class.forName(callableClassName);
 
             Method[] declaredMethods = clazz.getDeclaredMethods();
 
@@ -43,7 +43,7 @@ public class UserPermissionChecker {
             }
 
             if (calledMethod == null) {
-                throw new RuntimeException();
+                throw new WebApplicationException();
             }
 
             RolesAllowed rolesAllowed = calledMethod.getAnnotation(RolesAllowed.class);

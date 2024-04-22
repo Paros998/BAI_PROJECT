@@ -9,8 +9,8 @@ import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.Response;
 import lombok.NonNull;
-import org.bai.security.library.AppProperties;
 import org.bai.security.library.api.common.HttpStatusError;
+import org.bai.security.library.common.AppProperties;
 import org.bai.security.library.security.DataSourceIdentityStore;
 import org.bai.security.library.security.context.UserPrincipal;
 import org.bai.security.library.security.jwt.JwtExpire;
@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-
-import static org.bai.security.library.security.filter.JwtAuthenticationFilter.JWT_SECRET_PROPERTY;
 
 public class FormAuthenticationFilter implements ContainerRequestFilter {
     private static final String USERNAME = "username";
@@ -85,7 +83,7 @@ public class FormAuthenticationFilter implements ContainerRequestFilter {
             UserPrincipal principal = (UserPrincipal) result.getCallerPrincipal();
 
             try {
-                final String jwtSecret = AppProperties.getProperty(JWT_SECRET_PROPERTY);
+                final String jwtSecret = AppProperties.getProperty(AppProperties.JWT_SECRET_PROPERTY);
                 String accessToken = Jwts.builder()
                         .setSubject(principal.getUsername())
                         .claim("authorities", principal.getRoles())

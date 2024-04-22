@@ -1,6 +1,5 @@
-package org.bai.security.library.entity.user;
+package org.bai.security.library.entity.user.repository;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -8,23 +7,26 @@ import jakarta.persistence.NoResultException;
 import lombok.NonNull;
 import org.bai.security.library.api.users.RegisterRequest;
 import org.bai.security.library.api.users.UserDto;
-import org.bai.security.library.security.context.UserRole;
+import org.bai.security.library.business.BusinessExceptionFactory;
 import org.bai.security.library.domain.user.UserRepository;
+import org.bai.security.library.entity.user.UserEntity;
+import org.bai.security.library.entity.user.UserEntityPasswordCoder;
+import org.bai.security.library.entity.user.UserMapper;
+import org.bai.security.library.security.context.UserRole;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@ApplicationScoped
-public class UserEntityRepository implements UserRepository {
+public class UserEntityRepositorySafe implements UserRepository {
     private final UserEntityPasswordCoder entityPasswordCoder;
 
     @RequestScoped
     private final EntityManager em;
 
     @Inject
-    public UserEntityRepository(final UserEntityPasswordCoder entityPasswordCoder, final EntityManager em) {
+    public UserEntityRepositorySafe(final UserEntityPasswordCoder entityPasswordCoder, final EntityManager em) {
         this.entityPasswordCoder = entityPasswordCoder;
         this.em = em;
     }
@@ -35,6 +37,9 @@ public class UserEntityRepository implements UserRepository {
                 .map(UserMapper::toUserDto);
     }
 
+    /*
+     * Safe
+     */
     @Override
     public Optional<UserDto> findByUsername(final @NonNull String username) {
         try {
@@ -47,6 +52,7 @@ public class UserEntityRepository implements UserRepository {
             return Optional.empty();
         }
     }
+
 
     @Override
     public List<UserDto> findAll() {
@@ -67,8 +73,10 @@ public class UserEntityRepository implements UserRepository {
 
         try {
             em.persist(newUser);
-        } finally {
             transaction.commit();
+        }  catch (final Exception e) {
+            transaction.rollback();
+            throw BusinessExceptionFactory.forMessage("Error occurred during user creation");
         }
         return newUser.getId();
     }

@@ -7,6 +7,7 @@ import jakarta.security.enterprise.credential.UsernamePasswordCredential;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
 import jakarta.security.enterprise.identitystore.IdentityStore;
 import org.bai.security.library.domain.user.UserRepository;
+import org.bai.security.library.entity.user.repository.UserEntityRepository;
 import org.bai.security.library.entity.user.UserMapper;
 import org.bai.security.library.security.encoder.PasswordEncoder;
 
@@ -19,7 +20,7 @@ public class DataSourceIdentityStore implements IdentityStore {
     private final PasswordEncoder passwordEncoder;
 
     @Inject
-    public DataSourceIdentityStore(final UserRepository userRepository,final PasswordEncoder passwordEncoder) {
+    public DataSourceIdentityStore(final @UserEntityRepository UserRepository userRepository, final PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
