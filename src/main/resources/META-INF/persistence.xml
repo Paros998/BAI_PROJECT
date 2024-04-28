@@ -16,6 +16,7 @@
 <!--        <jta-data-source>library</jta-data-source>-->
 
         <class>org.bai.security.library.entity.user.UserEntity</class>
+        <class>org.bai.security.library.entity.book.BookEntity</class>
 
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
 

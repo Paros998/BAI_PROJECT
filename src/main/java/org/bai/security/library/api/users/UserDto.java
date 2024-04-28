@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
- * The type User dto.
+ * DTO for {@link org.bai.security.library.entity.user.UserEntity}
  */
 @Data
 @NoArgsConstructor

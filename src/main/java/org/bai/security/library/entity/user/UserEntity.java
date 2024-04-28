@@ -20,6 +20,7 @@ import java.util.UUID;
 public class UserEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id", nullable = false)
     private UUID id;
 
     @Column(unique = true)
@@ -50,7 +51,11 @@ public class UserEntity{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserEntity that = (UserEntity) o;
-        return enabled == that.enabled && Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(roles, that.roles);
+        return enabled == that.enabled
+                && Objects.equals(id, that.id)
+                && Objects.equals(username, that.username)
+                && Objects.equals(password, that.password)
+                && Objects.equals(roles, that.roles);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package org.bai.security.library.common;
+package org.bai.security.library.common.properties;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;

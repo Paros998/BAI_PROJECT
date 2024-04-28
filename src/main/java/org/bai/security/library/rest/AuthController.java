@@ -11,7 +11,7 @@ import org.bai.security.library.api.auth.LoginRequest;
 
 
 @Path("/auth")
-public class AuthResource {
+public class AuthController {
 
     @POST
     @Path("/login")

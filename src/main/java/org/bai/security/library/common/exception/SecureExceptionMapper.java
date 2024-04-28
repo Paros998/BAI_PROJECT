@@ -15,6 +15,8 @@ import static org.bai.security.library.common.exception.ErrorResponse.SERVER_ERR
 public class SecureExceptionMapper implements ExceptionMapper<Exception> {
     @Override
     public Response toResponse(final Exception e) {
+        e.printStackTrace();
+
         if (e instanceof WebApplicationException ex && ex.getResponse().getStatus() == BUSINESS.status()) {
             return mapBusinessException(ex);
         }

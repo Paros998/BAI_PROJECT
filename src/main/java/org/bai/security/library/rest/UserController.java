@@ -8,6 +8,7 @@ import jakarta.ws.rs.core.MediaType;
 import lombok.NonNull;
 import org.bai.security.library.api.users.RegisterRequest;
 import org.bai.security.library.api.users.UserDto;
+import org.bai.security.library.business.BusinessExceptionFactory;
 import org.bai.security.library.domain.user.UserRepository;
 import org.bai.security.library.entity.user.repository.UserEntityRepository;
 import org.bai.security.library.security.permission.checker.AppPermissionChecker;
@@ -17,13 +18,13 @@ import java.util.List;
 import java.util.UUID;
 
 @Path("/users")
-public class UserResource {
+public class UserController {
     private final UserRepository userRepository;
     private final PermissionChecker userPermissionChecker;
 
     @Inject
-    public UserResource(final @UserEntityRepository UserRepository userRepository,
-                        final @AppPermissionChecker PermissionChecker permissionChecker) {
+    public UserController(final @UserEntityRepository UserRepository userRepository,
+                          final @AppPermissionChecker PermissionChecker permissionChecker) {
         this.userRepository = userRepository;
         this.userPermissionChecker = permissionChecker;
     }
@@ -43,7 +44,8 @@ public class UserResource {
     @RolesAllowed({"ADMIN", "USER"})
     public UserDto getUserById(final @NonNull @PathParam("userId") UUID userId) {
         userPermissionChecker.check();
-        return userRepository.findById(userId).orElseThrow();
+        return userRepository.findById(userId)
+                .orElseThrow(() -> BusinessExceptionFactory.forMessage(String.format("User with id:[%s] not found", userId)));
     }
 
     @POST

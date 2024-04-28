@@ -10,7 +10,7 @@ import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.Response;
 import lombok.NonNull;
-import org.bai.security.library.common.AppProperties;
+import org.bai.security.library.common.properties.AppProperties;
 import org.bai.security.library.api.common.HttpStatusError;
 import org.bai.security.library.security.context.UserPrincipal;
 import org.bai.security.library.security.context.UserSecurityContext;
