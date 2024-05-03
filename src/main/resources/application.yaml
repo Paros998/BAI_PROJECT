@@ -5,3 +5,11 @@ app:
   safety:
     # can be true | false
     enabled: true
+  books:
+    lend:
+      time: 60
+  files:
+    default:
+      book:
+        file-name: book_basic.png
+    max-size: 4 # in megabytes

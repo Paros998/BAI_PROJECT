@@ -2,6 +2,7 @@ package org.bai.security.library.security.filter;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.credential.UsernamePasswordCredential;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
@@ -21,6 +22,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+@ApplicationScoped
 public class FormAuthenticationFilter implements ContainerRequestFilter {
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";

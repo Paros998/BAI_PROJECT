@@ -8,28 +8,45 @@ import jakarta.persistence.NoResultException;
 import lombok.NonNull;
 import org.bai.security.library.api.book.BookDto;
 import org.bai.security.library.business.BusinessExceptionFactory;
+import org.bai.security.library.common.properties.FilesConfig;
+import org.bai.security.library.common.properties.PropertyBasedFilesConfig;
 import org.bai.security.library.domain.book.BookRepository;
+import org.bai.security.library.domain.files.FileRepository;
+import org.bai.security.library.entity.files.FileEntity;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
 @ApplicationScoped
 public class BookEntityRepository implements BookRepository {
+    private final FileRepository fileRepository;
+    private final FilesConfig filesConfig;
+
     @RequestScoped
     private final EntityManager em;
 
     @Inject
-    public BookEntityRepository(final EntityManager entityManager) {
+    public BookEntityRepository(final FileRepository fileRepository,
+                                final @PropertyBasedFilesConfig FilesConfig filesConfig,
+                                final EntityManager entityManager) {
+        this.fileRepository = fileRepository;
+        this.filesConfig = filesConfig;
         this.em = entityManager;
     }
 
     @Override
     public Optional<BookDto> findById(final UUID id) {
+        return findEntityById(id).map(BookMapper::toDto);
+    }
+
+    @Override
+    public Optional<BookEntity> findEntityById(final UUID id) {
         try {
             return Optional.of(
                     em.find(BookEntity.class, id)
-            ).map(BookMapper::toDto);
+            );
         } catch (final Exception e) {
             return Optional.empty();
         }
@@ -53,11 +70,19 @@ public class BookEntityRepository implements BookRepository {
             );
         }
 
-        BookEntity newBook = BookMapper.toEntity(book);
+        FileEntity photo;
+        final BookEntity newBook = BookMapper.toEntity(book);
+
+        if (Objects.isNull(book.getPhotoId())) {
+            photo = fileRepository.getFileByFileName(filesConfig.getDefaultBookPhotoFileName()).orElse(null);
+        } else {
+            photo = fileRepository.findFileEntityById(UUID.fromString(book.getPhotoId())).orElse(null);
+        }
+        newBook.setPhoto(photo);
 
         final var transaction = em.getTransaction();
-        transaction.begin();
 
+        transaction.begin();
         try {
             em.persist(newBook);
             transaction.commit();

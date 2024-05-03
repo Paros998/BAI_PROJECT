@@ -17,15 +17,16 @@ public class ObjectMapperContextResolver implements ContextResolver<ObjectMapper
     private final ObjectMapper mapper;
 
     public ObjectMapperContextResolver() {
-        mapper = new ObjectMapper();
-        JavaTimeModule javaTimeModule = new JavaTimeModule();
+        final JavaTimeModule javaTimeModule = new JavaTimeModule();
         javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ISO_DATE_TIME));
+
+        mapper = new ObjectMapper();
         mapper.registerModule(javaTimeModule);
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
 
     @Override
-    public ObjectMapper getContext(Class<?> type) {
+    public ObjectMapper getContext(final Class<?> type) {
         return mapper;
     }
 }

@@ -28,5 +28,5 @@ public class BookDto implements Serializable {
     @NotNull
     private LocalDate releasedOn;
 
-    private String photoUrl;
+    private String photoId;
 }

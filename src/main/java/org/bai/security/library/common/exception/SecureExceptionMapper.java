@@ -1,5 +1,6 @@
 package org.bai.security.library.common.exception;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -12,6 +13,7 @@ import static org.bai.security.library.common.exception.ErrorResponse.BUSINESS_E
 import static org.bai.security.library.common.exception.ErrorResponse.SERVER_ERROR_CODE;
 
 @Provider
+@ApplicationScoped
 public class SecureExceptionMapper implements ExceptionMapper<Exception> {
     @Override
     public Response toResponse(final Exception e) {

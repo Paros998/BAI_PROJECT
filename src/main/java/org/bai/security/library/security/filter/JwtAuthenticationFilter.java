@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.lang.Strings;
 import io.jsonwebtoken.security.Keys;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.Response;
@@ -18,6 +19,7 @@ import org.bai.security.library.security.context.UserSecurityContext;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+@ApplicationScoped
 public class JwtAuthenticationFilter implements ContainerRequestFilter {
     private static final String JWT_SCHEME = "JWT";
 

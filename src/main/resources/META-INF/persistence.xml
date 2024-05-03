@@ -17,6 +17,8 @@
 
         <class>org.bai.security.library.entity.user.UserEntity</class>
         <class>org.bai.security.library.entity.book.BookEntity</class>
+        <class>org.bai.security.library.entity.stock.BookStockEntity</class>
+        <class>org.bai.security.library.entity.lend.LendEntity</class>
 
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
 

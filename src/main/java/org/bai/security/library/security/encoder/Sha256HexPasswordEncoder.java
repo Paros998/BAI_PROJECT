@@ -8,12 +8,12 @@ import org.apache.commons.codec.digest.DigestUtils;
 public class Sha256HexPasswordEncoder implements PasswordEncoder {
 
     @Override
-    public boolean matches(@NonNull String encodedOriginal, @NonNull String contender) {
+    public boolean matches(final @NonNull String encodedOriginal, final @NonNull String contender) {
         return encode(contender).equals(encodedOriginal);
     }
 
     @Override
-    public String encode(@NonNull String password) {
+    public String encode(final @NonNull String password) {
         return DigestUtils.sha256Hex(password);
     }
 }

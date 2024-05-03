@@ -41,11 +41,18 @@ public class AppProperties {
 
     public static final String JWT_SECRET_PROPERTY = "jwt.secret";
     public static final String APP_SAFETY_MODE = "app.safety.enabled";
+    public static final String BOOKS_LEND_TIME = "app.books.lend.time";
+    public static final String BOOKS_DEFAULT_FILE = "app.files.default.book.file-name";
+    public static final String FILES_MAX_SIZE = "app.files.max-size";
 
     /* ----------------------------------------------------------- */
 
     public static String getProperty(final String key) {
         return properties.getProperty(key);
+    }
+
+    public static Long convertMegaBytesToBytes(final Long megabytes) {
+        return megabytes * 1024 * 1024;
     }
 
     @Produces
@@ -55,6 +62,19 @@ public class AppProperties {
         final boolean isSafetyEnabled = Boolean.parseBoolean(getProperty(APP_SAFETY_MODE));
         return AppState.builder()
                 .appMode(isSafetyEnabled ? AppState.AppMode.SAFE : AppState.AppMode.UNSAFE)
+                .build();
+    }
+
+    @Produces
+    @ApplicationScoped
+    @PropertyBasedFilesConfig
+    public FilesConfig filesConfig() {
+        final String[] defaultBookPhoto = getProperty(BOOKS_DEFAULT_FILE).split("\\.");
+        long filesMaxSize = convertMegaBytesToBytes(Long.parseLong(getProperty(FILES_MAX_SIZE)));
+        return FilesConfig.builder()
+                .maxFileSizeInBytes(filesMaxSize)
+                .defaultBookPhotoFileName(defaultBookPhoto[0])
+                .defaultBookPhotoFileExtension(defaultBookPhoto[1])
                 .build();
     }
 

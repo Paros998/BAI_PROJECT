@@ -2,6 +2,7 @@ package org.bai.security.library.entity.book;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.bai.security.library.entity.files.FileEntity;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -23,7 +24,10 @@ public class BookEntity {
     private String title;
     private String author;
     private LocalDate releasedOn;
-    private String photoUrl;
+
+    @ManyToOne
+    @JoinColumn(name = "fileId")
+    private FileEntity photo;
 
     @Override
     public boolean equals(Object o) {
@@ -34,11 +38,11 @@ public class BookEntity {
                 && Objects.equals(title, that.title)
                 && Objects.equals(author, that.author)
                 && Objects.equals(releasedOn, that.releasedOn)
-                && Objects.equals(photoUrl, that.photoUrl);
+                && Objects.equals(photo, that.photo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, author, releasedOn, photoUrl);
+        return Objects.hash(id, title, author, releasedOn, photo);
     }
 }

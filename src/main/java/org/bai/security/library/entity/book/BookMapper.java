@@ -13,7 +13,7 @@ public class BookMapper {
                 .title(book.getTitle())
                 .author(book.getAuthor())
                 .releasedOn(book.getReleasedOn())
-                .photoUrl(book.getPhotoUrl())
+                .photoId(book.getPhoto().getFileId().toString())
                 .build();
     }
 
@@ -22,7 +22,6 @@ public class BookMapper {
                 .title(book.getTitle())
                 .author(book.getAuthor())
                 .releasedOn(book.getReleasedOn())
-                .photoUrl(book.getPhotoUrl())
                 .build();
     }
 }
