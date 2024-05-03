@@ -2,7 +2,8 @@ package org.bai.security.library.entity.book;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.bai.security.library.api.book.BookDto;
+import org.bai.security.library.api.books.AddBookDto;
+import org.bai.security.library.api.books.BookDto;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BookMapper {
@@ -17,7 +18,7 @@ public class BookMapper {
                 .build();
     }
 
-    public static BookEntity toEntity(final BookDto book) {
+    public static BookEntity toEntity(final AddBookDto book) {
         return BookEntity.builder()
                 .title(book.getTitle())
                 .author(book.getAuthor())

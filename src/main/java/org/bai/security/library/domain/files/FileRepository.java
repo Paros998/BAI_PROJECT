@@ -1,6 +1,7 @@
 package org.bai.security.library.domain.files;
 
 import lombok.NonNull;
+import org.bai.security.library.api.files.FileDto;
 import org.bai.security.library.entity.files.FileEntity;
 
 import java.io.File;

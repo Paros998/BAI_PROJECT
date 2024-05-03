@@ -35,6 +35,7 @@ public class LendEntity {
     private Integer overLent;
 
     private Boolean active;
+    private Boolean isOverLent;
 
     @Override
     public boolean equals(Object o) {
@@ -47,11 +48,12 @@ public class LendEntity {
                 && Objects.equals(lentOn, that.lentOn)
                 && Objects.equals(lentTill, that.lentTill)
                 && Objects.equals(overLent, that.overLent)
+                && Objects.equals(isOverLent, that.isOverLent)
                 && Objects.equals(active, that.active);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, bookStock, lentOn, lentTill, overLent, active);
+        return Objects.hash(id, user, bookStock, lentOn, lentTill, overLent, isOverLent, active);
     }
 }

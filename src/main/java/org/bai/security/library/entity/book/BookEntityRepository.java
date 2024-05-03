@@ -6,7 +6,8 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import lombok.NonNull;
-import org.bai.security.library.api.book.BookDto;
+import org.bai.security.library.api.books.AddBookDto;
+import org.bai.security.library.api.books.BookDto;
 import org.bai.security.library.business.BusinessExceptionFactory;
 import org.bai.security.library.common.properties.FilesConfig;
 import org.bai.security.library.common.properties.PropertyBasedFilesConfig;
@@ -62,7 +63,7 @@ public class BookEntityRepository implements BookRepository {
     }
 
     @Override
-    public UUID addBook(final @NonNull BookDto book) {
+    public UUID addBook(final @NonNull AddBookDto book) {
         if (findByTitle(book.getTitle()).isPresent()) {
             throw BusinessExceptionFactory.forMessage(
                     String.format("Book with title:[%s] already exists, cannot duplicate books.",

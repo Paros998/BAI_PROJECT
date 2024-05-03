@@ -1,6 +1,7 @@
 package org.bai.security.library.domain.book;
 
-import org.bai.security.library.api.book.BookDto;
+import org.bai.security.library.api.books.AddBookDto;
+import org.bai.security.library.api.books.BookDto;
 import org.bai.security.library.entity.book.BookEntity;
 
 import java.util.List;
@@ -15,5 +16,5 @@ public interface BookRepository {
 
     List<BookDto> findAll();
 
-    UUID addBook(BookDto book);
+    UUID addBook(AddBookDto book);
 }

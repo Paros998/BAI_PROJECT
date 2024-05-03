@@ -2,6 +2,7 @@ package org.bai.security.library.entity.lend;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.bai.security.library.api.lends.LendDto;
 import org.bai.security.library.entity.stock.BookStockEntity;
 import org.bai.security.library.entity.user.UserEntity;
 
@@ -16,6 +17,23 @@ public class LendMapper {
                 .lentOn(LocalDateTime.now())
                 .lentTill(LocalDateTime.now().plusDays(days))
                 .active(true)
+                .isOverLent(false)
+                .overLent(0)
+                .build();
+    }
+
+    public static LendDto toLendDto(final LendEntity lend) {
+        final BookStockEntity bookStock = lend.getBookStock();
+        return LendDto.builder()
+                .lendId(lend.getId().toString())
+                .isActive(lend.getActive())
+                .isOverLent(lend.getIsOverLent())
+                .overLent(lend.getOverLent())
+                .userId(lend.getUser().getId().toString())
+                .bookStockId(bookStock.getId().toString())
+                .bookId(bookStock.getBook().getId().toString())
+                .lentOn(lend.getLentOn())
+                .lentTill(lend.getLentTill())
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package org.bai.security.library.rest;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.ws.rs.*;
@@ -10,6 +11,8 @@ import lombok.NonNull;
 import org.bai.security.library.domain.files.FileRepository;
 import org.bai.security.library.rest.helper.FileService;
 import org.bai.security.library.rest.helper.FilesHelper;
+import org.bai.security.library.security.permission.checker.AppPermissionChecker;
+import org.bai.security.library.security.permission.checker.PermissionChecker;
 
 import java.io.File;
 import java.util.List;
@@ -23,18 +26,23 @@ import java.util.UUID;
 public class FilesController {
     private final FileRepository fileRepository;
     private final FilesHelper filesHelper;
+    private final PermissionChecker userPermissionChecker;
 
     @Inject
     public FilesController(final FileRepository fileRepository,
-                           final @FileService FilesHelper filesHelper) {
+                           final @FileService FilesHelper filesHelper,
+                           final @AppPermissionChecker PermissionChecker userPermissionChecker) {
         this.fileRepository = fileRepository;
         this.filesHelper = filesHelper;
+        this.userPermissionChecker = userPermissionChecker;
     }
 
     @GET
     @Path("/{fileId}")
     @Produces(value = MediaType.APPLICATION_OCTET_STREAM)
+    @RolesAllowed({"ADMIN", "USER"})
     public Response downloadFile(final @NonNull @PathParam("fileId") UUID fileId) {
+        userPermissionChecker.check();
         final var file = fileRepository.getFile(fileId);
         return Response.ok(file.getContent(), MediaType.APPLICATION_OCTET_STREAM)
                 .header("Content-Disposition",
@@ -45,7 +53,9 @@ public class FilesController {
     @POST
     @Consumes(value = MediaType.MULTIPART_FORM_DATA)
     @Produces(value = MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADMIN", "USER"})
     public UUID uploadFile(final List<EntityPart> parts) {
+        userPermissionChecker.check();
         final File file = filesHelper.savePartsToTempFile(parts);
         return fileRepository.saveFile(file);
     }

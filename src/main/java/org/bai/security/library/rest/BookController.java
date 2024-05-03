@@ -6,7 +6,8 @@ import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import lombok.NonNull;
-import org.bai.security.library.api.book.BookDto;
+import org.bai.security.library.api.books.AddBookDto;
+import org.bai.security.library.api.books.BookDto;
 import org.bai.security.library.business.BusinessExceptionFactory;
 import org.bai.security.library.domain.book.BookRepository;
 import org.bai.security.library.security.permission.checker.AppPermissionChecker;
@@ -51,7 +52,8 @@ public class BookController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed("ADMIN")
-    public UUID addNewBook(final @NonNull @Valid BookDto book) {
+    public UUID addNewBook(final @NonNull @Valid AddBookDto book) {
+        userPermissionChecker.check();
         return bookRepository.addBook(book);
     }
 }

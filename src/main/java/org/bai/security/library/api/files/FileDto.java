@@ -1,4 +1,4 @@
-package org.bai.security.library.domain.files;
+package org.bai.security.library.api.files;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

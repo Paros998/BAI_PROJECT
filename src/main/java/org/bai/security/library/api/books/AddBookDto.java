@@ -1,24 +1,18 @@
-package org.bai.security.library.api.book;
+package org.bai.security.library.api.books;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
-/**
- * DTO for {@link org.bai.security.library.entity.book.BookEntity}
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @ToString
 @EqualsAndHashCode
-public class BookDto implements Serializable {
-    private String bookId;
-
+public class AddBookDto {
     @NotEmpty
     private String title;
 

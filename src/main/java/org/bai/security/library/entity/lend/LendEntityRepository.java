@@ -7,6 +7,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.ws.rs.WebApplicationException;
 import lombok.NonNull;
+import org.bai.security.library.api.lends.LendDto;
 import org.bai.security.library.business.BusinessExceptionFactory;
 import org.bai.security.library.common.properties.AppProperties;
 import org.bai.security.library.domain.lend.LendRepository;
@@ -16,6 +17,7 @@ import org.bai.security.library.entity.stock.BookStockEntity;
 import org.bai.security.library.entity.user.UserEntity;
 import org.bai.security.library.entity.user.repository.UserEntityRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.bai.security.library.common.properties.AppProperties.BOOKS_LEND_TIME;
@@ -78,4 +80,15 @@ public class LendEntityRepository implements LendRepository {
 
         return lend.getId();
     }
+
+    @Override
+    public List<LendDto> findAllByUser(final UUID userId) {
+        return em.createQuery("select l from lends l where l.user.id = :userId", LendEntity.class)
+                .setParameter("userId", userId)
+                .getResultList()
+                .stream()
+                .map(LendMapper::toLendDto)
+                .toList();
+    }
+
 }

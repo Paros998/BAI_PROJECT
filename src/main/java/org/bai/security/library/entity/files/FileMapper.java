@@ -1,9 +1,9 @@
-package org.bai.security.library.domain.files;
+package org.bai.security.library.entity.files;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.bai.security.library.entity.files.FileEntity;
+import org.bai.security.library.api.files.FileDto;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileMapper {
