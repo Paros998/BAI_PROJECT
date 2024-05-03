@@ -73,7 +73,7 @@ public class LendEntityRepository implements LendRepository {
             throw e;
         } catch (final Exception e) {
             transaction.rollback();
-            throw BusinessExceptionFactory.forMessage("Error during lend creation occurred, try again.");
+            throw BusinessExceptionFactory.forMessage("Error during lend creation occurred, try again.", e);
         }
 
         return lend.getId();

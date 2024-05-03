@@ -88,7 +88,7 @@ public class BookEntityRepository implements BookRepository {
             transaction.commit();
         } catch (final Exception e) {
             transaction.rollback();
-            throw BusinessExceptionFactory.forMessage("Error occurred during book creation");
+            throw BusinessExceptionFactory.forMessage("Error occurred during book creation", e);
         }
         return newBook.getId();
     }

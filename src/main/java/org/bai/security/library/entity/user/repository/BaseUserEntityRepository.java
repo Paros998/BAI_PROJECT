@@ -62,7 +62,7 @@ public abstract class BaseUserEntityRepository implements UserRepository {
             transaction.commit();
         } catch (final Exception e) {
             transaction.rollback();
-            throw BusinessExceptionFactory.forMessage("Error occurred during user creation");
+            throw BusinessExceptionFactory.forMessage("Error occurred during user creation", e);
         }
         return newUser.getId();
     }

@@ -10,6 +10,8 @@ app:
       time: 60
   files:
     default:
+      temp:
+        directory: lib_files
       book:
         file-name: book_basic.png
-    max-size: 4 # in megabytes
+    max-size: 20 # in megabytes

@@ -13,6 +13,8 @@ import org.bai.security.library.common.properties.PropertyBasedFilesConfig;
 import org.bai.security.library.domain.files.FileDto;
 import org.bai.security.library.domain.files.FileMapper;
 import org.bai.security.library.domain.files.FileRepository;
+import org.bai.security.library.rest.helper.FileService;
+import org.bai.security.library.rest.helper.FilesHelper;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,14 +25,17 @@ import java.util.UUID;
 @ApplicationScoped
 public class FileEntityRepository implements FileRepository {
     private final FilesConfig filesConfig;
+    private final FilesHelper filesHelper;
 
     @RequestScoped
     private final EntityManager em;
 
     @Inject
     public FileEntityRepository(final @PropertyBasedFilesConfig FilesConfig filesConfig,
+                                final @FileService FilesHelper filesHelper,
                                 final EntityManager em) {
         this.filesConfig = filesConfig;
+        this.filesHelper = filesHelper;
         this.em = em;
 
         initializeDefaults();
@@ -64,13 +69,15 @@ public class FileEntityRepository implements FileRepository {
         try (final var in = new FileInputStream(file.getPath())) {
             validateFileSize(in);
             fileEntity.setContent(in.readAllBytes());
+
             em.persist(fileEntity);
             transaction.commit();
         } catch (final Exception e) {
             transaction.rollback();
-            throw BusinessExceptionFactory.forMessage("Error during file saving.");
+            throw BusinessExceptionFactory.forMessage("Error during file saving.", e);
         }
 
+        filesHelper.cleanUpFile(file);
         return fileEntity.getFileId();
     }
 

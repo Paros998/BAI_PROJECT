@@ -99,6 +99,7 @@ public class FormAuthenticationFilter implements ContainerRequestFilter {
                         .header("Authorization", "Bearer " + accessToken)
                         .build());
             } catch (final Exception e) {
+                e.printStackTrace();
                 requestContext.abortWith(Response.serverError().entity(e.getMessage()).build());
             }
         }

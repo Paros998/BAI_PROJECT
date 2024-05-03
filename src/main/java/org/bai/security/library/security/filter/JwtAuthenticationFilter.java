@@ -52,6 +52,7 @@ public class JwtAuthenticationFilter implements ContainerRequestFilter {
                 requestContext.setSecurityContext(context);
 
             } catch (final ExpiredJwtException e) {
+                e.printStackTrace();
                 requestContext.abortWith(Response
                         .status(HttpStatusError.FORBIDDEN.status())
                         .entity(HttpStatusError.FORBIDDEN.msg())

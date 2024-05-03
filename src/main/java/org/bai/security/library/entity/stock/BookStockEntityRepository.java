@@ -55,7 +55,7 @@ public class BookStockEntityRepository implements BookStockRepository {
             transaction.commit();
         } catch (final Exception e) {
             transaction.rollback();
-            throw BusinessExceptionFactory.forMessage(String.format("Book stock with id:[%s] lent status change failed.", bookStockId));
+            throw BusinessExceptionFactory.forMessage(String.format("Book stock with id:[%s] lent status change failed.", bookStockId), e);
         }
     }
 

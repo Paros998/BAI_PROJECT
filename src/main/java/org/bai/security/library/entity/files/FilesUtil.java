@@ -21,7 +21,6 @@ public class FilesUtil {
             final var uri = resource.toURI();
             return new File(uri);
         } catch (final Exception e) {
-            e.printStackTrace();
             throw new FileNotFoundException(e);
         }
     }

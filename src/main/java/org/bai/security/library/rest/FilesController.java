@@ -1,24 +1,34 @@
 package org.bai.security.library.rest;
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.EntityPart;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.NonNull;
 import org.bai.security.library.domain.files.FileRepository;
+import org.bai.security.library.rest.helper.FileService;
+import org.bai.security.library.rest.helper.FilesHelper;
 
+import java.io.File;
+import java.util.List;
 import java.util.UUID;
 
 @Path("files")
+@MultipartConfig(
+        fileSizeThreshold=1024*1024*10, 	// 10 MB TODO move to application.yaml config
+        maxFileSize=1024*1024*20,      	// 50 MB
+        maxRequestSize=1024*1024*50)
 public class FilesController {
     private final FileRepository fileRepository;
+    private final FilesHelper filesHelper;
 
     @Inject
-    public FilesController(final FileRepository fileRepository) {
+    public FilesController(final FileRepository fileRepository,
+                           final @FileService FilesHelper filesHelper) {
         this.fileRepository = fileRepository;
+        this.filesHelper = filesHelper;
     }
 
     @GET
@@ -30,5 +40,13 @@ public class FilesController {
                 .header("Content-Disposition",
                         "attachment; filename=\"" + file.getFileName() + "." + file.getExtension() + "\"")
                 .build();
+    }
+
+    @POST
+    @Consumes(value = MediaType.MULTIPART_FORM_DATA)
+    @Produces(value = MediaType.APPLICATION_JSON)
+    public UUID uploadFile(final List<EntityPart> parts) {
+        final File file = filesHelper.savePartsToTempFile(parts);
+        return fileRepository.saveFile(file);
     }
 }

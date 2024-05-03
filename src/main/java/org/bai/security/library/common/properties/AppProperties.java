@@ -3,6 +3,7 @@ package org.bai.security.library.common.properties;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Singleton;
+import jakarta.ws.rs.WebApplicationException;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -23,7 +24,7 @@ public class AppProperties {
                 buildProperties("", yamlData, properties);
             }
         } catch (final Exception e) {
-            e.printStackTrace();
+            throw new WebApplicationException(e);
         }
     }
 
@@ -44,6 +45,7 @@ public class AppProperties {
     public static final String BOOKS_LEND_TIME = "app.books.lend.time";
     public static final String BOOKS_DEFAULT_FILE = "app.files.default.book.file-name";
     public static final String FILES_MAX_SIZE = "app.files.max-size";
+    public static final String FILES_TEMP_DIR = "app.files.default.temp.directory";
 
     /* ----------------------------------------------------------- */
 
