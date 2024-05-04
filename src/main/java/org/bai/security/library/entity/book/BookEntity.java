@@ -1,10 +1,13 @@
 package org.bai.security.library.entity.book;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.bai.security.library.entity.files.FileEntity;
+import org.bai.security.library.entity.stock.BookStockEntity;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -28,6 +31,11 @@ public class BookEntity {
     @ManyToOne
     @JoinColumn(name = "fileId")
     private FileEntity photo;
+
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY)
+    @JsonBackReference
+    @ToString.Exclude
+    private List<BookStockEntity> stocks;
 
     @Override
     public boolean equals(Object o) {

@@ -24,4 +24,6 @@ public class BookDto implements Serializable {
     private LocalDate releasedOn;
 
     private String photoId;
+
+    private Integer onStock;
 }

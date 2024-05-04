@@ -1,5 +1,6 @@
 package org.bai.security.library.entity.stock;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.bai.security.library.entity.book.BookEntity;
@@ -22,6 +23,7 @@ public class BookStockEntity {
     private UUID id;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "book_id")
     private BookEntity book;
 

@@ -14,7 +14,8 @@ public class BookMapper {
                 .title(book.getTitle())
                 .author(book.getAuthor())
                 .releasedOn(book.getReleasedOn())
-                .photoId(book.getPhoto().getFileId().toString())
+                .photoId(book.getPhoto() != null ? book.getPhoto().getFileId().toString() : null)
+                .onStock(book.getStocks().stream().filter(s -> !s.isLent()).toList().size())
                 .build();
     }
 
