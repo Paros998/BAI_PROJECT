@@ -32,6 +32,8 @@ public class LendEntity {
 
     private LocalDateTime lentOn;
     private LocalDateTime lentTill;
+
+    // TODO async checker to set isOverLent and overLent value
     private Integer overLent;
 
     private Boolean active;

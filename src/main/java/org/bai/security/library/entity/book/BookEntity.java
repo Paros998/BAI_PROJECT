@@ -26,6 +26,10 @@ public class BookEntity {
 
     private String title;
     private String author;
+    private String genre;
+
+    @Column(length = 1000)
+    private String description;
     private LocalDate releasedOn;
 
     @ManyToOne
@@ -46,11 +50,12 @@ public class BookEntity {
                 && Objects.equals(title, that.title)
                 && Objects.equals(author, that.author)
                 && Objects.equals(releasedOn, that.releasedOn)
-                && Objects.equals(photo, that.photo);
+                && Objects.equals(photo, that.photo)
+                && Objects.equals(stocks, that.stocks);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, author, releasedOn, photo);
+        return Objects.hash(id, title, author, releasedOn, photo, stocks);
     }
 }

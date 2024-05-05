@@ -21,6 +21,10 @@ public class BookDto implements Serializable {
 
     private String author;
 
+    private String genre;
+
+    private String description;
+
     private LocalDate releasedOn;
 
     private String photoId;

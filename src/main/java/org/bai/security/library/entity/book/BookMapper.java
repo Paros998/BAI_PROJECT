@@ -13,6 +13,8 @@ public class BookMapper {
                 .bookId(book.getId().toString())
                 .title(book.getTitle())
                 .author(book.getAuthor())
+                .genre(book.getGenre())
+                .description(book.getDescription())
                 .releasedOn(book.getReleasedOn())
                 .photoId(book.getPhoto() != null ? book.getPhoto().getFileId().toString() : null)
                 .onStock(book.getStocks().stream().filter(s -> !s.isLent()).toList().size())
@@ -23,6 +25,8 @@ public class BookMapper {
         return BookEntity.builder()
                 .title(book.getTitle())
                 .author(book.getAuthor())
+                .genre(book.getGenre())
+                .description(book.getDescription())
                 .releasedOn(book.getReleasedOn())
                 .build();
     }

@@ -19,6 +19,11 @@ public class AddBookDto {
     @NotEmpty
     private String author;
 
+    @NotEmpty
+    private String genre;
+
+    private String description;
+
     @NotNull
     private LocalDate releasedOn;
 
