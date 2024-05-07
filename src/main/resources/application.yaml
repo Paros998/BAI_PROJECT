@@ -15,3 +15,7 @@ app:
       book:
         file-name: book_basic.png
     max-size: 20 # in megabytes
+    file-upload:
+      fileSizeThreshold: 10MB
+      maxFileSize: 20MB
+      maxRequestSize: 50MB
