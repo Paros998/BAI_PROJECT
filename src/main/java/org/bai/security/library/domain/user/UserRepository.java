@@ -23,5 +23,5 @@ public interface UserRepository {
 
   UUID registerUser(@NonNull RegisterRequest request);
 
-  boolean deleteById(UUID userId);
+  boolean deleteById(@NonNull UUID userId);
 }

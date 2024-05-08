@@ -77,4 +77,9 @@ public abstract class BaseUserEntityRepository implements UserRepository {
                 .build();
         return saveUser(newUser);
     }
+
+    @Override
+    public boolean deleteById(final @NonNull UUID userId) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
