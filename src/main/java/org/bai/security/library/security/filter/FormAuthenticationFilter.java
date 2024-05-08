@@ -10,6 +10,7 @@ import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.Response;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.bai.security.library.api.common.HttpStatusError;
 import org.bai.security.library.common.properties.AppProperties;
 import org.bai.security.library.security.DataSourceIdentityStore;
@@ -22,6 +23,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+@Slf4j
 @ApplicationScoped
 public class FormAuthenticationFilter implements ContainerRequestFilter {
     private static final String USERNAME = "username";
@@ -85,7 +87,7 @@ public class FormAuthenticationFilter implements ContainerRequestFilter {
             UserPrincipal principal = (UserPrincipal) result.getCallerPrincipal();
 
             try {
-                final String jwtSecret = AppProperties.getProperty(AppProperties.JWT_SECRET_PROPERTY);
+                final String jwtSecret = AppProperties.getProperties().getJwt().getSecret();
                 String accessToken = Jwts.builder()
                         .setSubject(principal.getUsername())
                         .claim("authorities", principal.getRoles())
@@ -99,7 +101,7 @@ public class FormAuthenticationFilter implements ContainerRequestFilter {
                         .header("Authorization", "Bearer " + accessToken)
                         .build());
             } catch (final Exception e) {
-                e.printStackTrace();
+                log.error("error", e);
                 requestContext.abortWith(Response.serverError().entity(e.getMessage()).build());
             }
         }

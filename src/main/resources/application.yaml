@@ -1,21 +1,15 @@
 jwt:
   secret: opaj21sd6opia1238012asjd-=-1123ni0n102rj19384fha0fdhj9012h3r9zg7f89iwbf9834hb9834gbf9ud
-
-app:
-  safety:
-    # can be true | false
-    enabled: true
-  books:
-    lend:
-      time: 60
-  files:
-    default:
-      temp:
-        directory: lib_files
-      book:
-        file-name: book_basic.png
-    max-size: 20 # in megabytes
-    file-upload:
-      fileSizeThreshold: 10MB
-      maxFileSize: 20MB
-      maxRequestSize: 50MB
+safety:
+  # can be true | false
+  enabled: true
+books:
+  # in days
+  lendTime: 60
+files:
+  tempDirectory: lib_files
+  bookFileName: book_basic.png
+  fileUpload: # in MegaBytes
+    fileSizeThreshold: 10
+    maxFileSize: 20
+    maxRequestSize: 50

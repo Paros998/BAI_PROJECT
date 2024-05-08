@@ -15,8 +15,9 @@ public class BusinessExceptionFactory {
     public static WebApplicationException forMessage(final String message) {
         return new WebApplicationException(Response.status(BUSINESS.status(), message).build());
     }
+
     public static WebApplicationException forMessage(final String message, final Exception e) {
-        log.info(e.getMessage());
+        log.error("error", e);
         return new WebApplicationException(Response.status(BUSINESS.status(), message).build());
     }
 }

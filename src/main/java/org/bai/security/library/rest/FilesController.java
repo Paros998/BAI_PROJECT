@@ -1,13 +1,16 @@
 package org.bai.security.library.rest;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.EntityPart;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.NonNull;
+import org.bai.security.library.common.properties.AppProperties;
 import org.bai.security.library.domain.files.FileRepository;
 import org.bai.security.library.rest.helper.FileService;
 import org.bai.security.library.rest.helper.FilesHelper;
@@ -19,14 +22,21 @@ import java.util.List;
 import java.util.UUID;
 
 @Path("files")
-@MultipartConfig(
-        fileSizeThreshold=1024*1024*10, 	// 10 MB TODO move to application.yaml config
-        maxFileSize=1024*1024*20,      	// 50 MB
-        maxRequestSize=1024*1024*50)    //TODO: [Barbara]: where is it used?
-public class FilesController {
+@MultipartConfig
+public class FilesController extends HttpServlet {
     private final FileRepository fileRepository;
     private final FilesHelper filesHelper;
     private final PermissionChecker userPermissionChecker;
+
+    @PostConstruct
+    void initialize() {
+        // UNTESTED
+        final var servletContext = getServletContext();
+        final var config = AppProperties.getProperties().getFiles().getFileUpload();
+        servletContext.setAttribute("fileSizeThreshold", config.getFileSizeThreshold());
+        servletContext.setAttribute("maxFileSize", config.getMaxFileSize());
+        servletContext.setAttribute("maxRequestSize", config.getMaxRequestSize());
+    }
 
     @Inject
     public FilesController(final FileRepository fileRepository,
