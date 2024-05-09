@@ -22,8 +22,6 @@ public class AdminController {
 
     @GET
     @Path("/delete-user/{userId}")
-    @Produces(MediaType.TEXT_PLAIN) // TEXT_PLAIN ?? Not needed for frontend client, also doesn't need to return anything, frontend
-    // client will know by 200 response
     public String deleteUser(@PathParam("userId") UUID userId) {
         // No admin privileges check
         return userRepository.deleteById(userId) ? "User deleted." : "User not found.";
