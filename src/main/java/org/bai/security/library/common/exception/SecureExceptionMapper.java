@@ -6,19 +6,20 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
+import lombok.extern.slf4j.Slf4j;
 
 import static jakarta.ws.rs.core.Response.Status.INTERNAL_SERVER_ERROR;
 import static org.bai.security.library.api.common.HttpStatusError.BUSINESS;
 import static org.bai.security.library.common.exception.ErrorResponse.BUSINESS_ERROR_CODE;
 import static org.bai.security.library.common.exception.ErrorResponse.SERVER_ERROR_CODE;
 
+@Slf4j
 @Provider
 @ApplicationScoped
 public class SecureExceptionMapper implements ExceptionMapper<Exception> {
     @Override
     public Response toResponse(final Exception e) {
-        e.printStackTrace();
-
+        log.error("error", e);
         if (e instanceof WebApplicationException ex && ex.getResponse().getStatus() == BUSINESS.status()) {
             return mapBusinessException(ex);
         }

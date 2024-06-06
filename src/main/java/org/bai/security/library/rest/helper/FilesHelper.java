@@ -11,14 +11,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import static org.bai.security.library.common.properties.AppProperties.FILES_TEMP_DIR;
-
 public class FilesHelper {
     private final Path tempDir;
 
     protected FilesHelper() {
         try {
-            tempDir = Files.createTempDirectory(AppProperties.getProperty(FILES_TEMP_DIR));
+            tempDir = Files.createTempDirectory(AppProperties.getProperties().getFiles().getTempDirectory());
             if (!tempDir.toFile().exists()) {
                 tempDir.toFile().createNewFile();
             }
@@ -27,7 +25,7 @@ public class FilesHelper {
         }
     }
 
-    public File savePartsToTempFile(final List<EntityPart> parts) {
+    public File savePartsToTempFile(final @NonNull List<EntityPart> parts) {
         if (parts.isEmpty()) {
             throw BusinessExceptionFactory.forMessage("Error during file operations. No parts provided");
         }

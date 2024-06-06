@@ -36,6 +36,8 @@
         <snake-yaml.version>2.2</snake-yaml.version>
 
         <junit.version>5.9.2</junit.version>
+        <slf4j.version>2.0.13</slf4j.version>
+        <slf4j-jdk14.version>2.0.9</slf4j-jdk14.version>
 
         <lombok.version>1.18.30</lombok.version>
     </properties>
@@ -182,6 +184,18 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>${slf4j-jdk14.version}</version>
+            <scope>runtime</scope>
+        </dependency>
         <!-- Junit Test -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>

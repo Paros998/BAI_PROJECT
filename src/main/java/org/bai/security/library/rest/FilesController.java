@@ -20,8 +20,8 @@ import java.util.UUID;
 
 @Path("files")
 @MultipartConfig(
-        fileSizeThreshold=1024*1024*10, 	// 10 MB TODO move to application.yaml config
-        maxFileSize=1024*1024*20,      	// 50 MB
+        fileSizeThreshold=1024*1024*10,
+        maxFileSize=1024*1024*20,
         maxRequestSize=1024*1024*50)
 public class FilesController {
     private final FileRepository fileRepository;

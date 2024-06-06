@@ -20,8 +20,6 @@ import org.bai.security.library.entity.user.repository.UserEntityRepository;
 import java.util.List;
 import java.util.UUID;
 
-import static org.bai.security.library.common.properties.AppProperties.BOOKS_LEND_TIME;
-
 @ApplicationScoped
 public class LendEntityRepository implements LendRepository {
     private final UserRepository userRepository;
@@ -63,7 +61,7 @@ public class LendEntityRepository implements LendRepository {
             lend = LendMapper.instantiateActiveLendFor(
                     user,
                     stock,
-                    Integer.parseInt(AppProperties.getProperty(BOOKS_LEND_TIME))
+                    AppProperties.getProperties().getBooks().getLendTime()
             );
 
             em.persist(lend);

@@ -11,14 +11,19 @@ import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.Response;
 import lombok.NonNull;
-import org.bai.security.library.common.properties.AppProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.bai.security.library.api.common.HttpStatusError;
+import org.bai.security.library.common.properties.AppProperties;
 import org.bai.security.library.security.context.UserPrincipal;
 import org.bai.security.library.security.context.UserSecurityContext;
 
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
+@Slf4j
 @ApplicationScoped
 public class JwtAuthenticationFilter implements ContainerRequestFilter {
     private static final String JWT_SCHEME = "JWT";
@@ -30,7 +35,7 @@ public class JwtAuthenticationFilter implements ContainerRequestFilter {
         if (!Objects.isNull(authorizationHeader) && Strings.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.replace("Bearer ", "");
             try {
-                final String jwtSecret = AppProperties.getProperty(AppProperties.JWT_SECRET_PROPERTY);
+                final String jwtSecret = AppProperties.getProperties().getJwt().getSecret();
                 final Jws<Claims> claimsJws = Jwts.parserBuilder()
                         .setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8))).build()
                         .parseClaimsJws(token);
@@ -52,7 +57,7 @@ public class JwtAuthenticationFilter implements ContainerRequestFilter {
                 requestContext.setSecurityContext(context);
 
             } catch (final ExpiredJwtException e) {
-                e.printStackTrace();
+                log.error("error", e);
                 requestContext.abortWith(Response
                         .status(HttpStatusError.FORBIDDEN.status())
                         .entity(HttpStatusError.FORBIDDEN.msg())

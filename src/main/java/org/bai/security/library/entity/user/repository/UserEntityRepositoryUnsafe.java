@@ -24,8 +24,8 @@ public class UserEntityRepositoryUnsafe extends BaseUserEntityRepository {
     @Override
     public Optional<UserDto> findByUsername(final @NonNull String username) {
         try {
-            return Optional.of(
-                    em.createQuery(String.format("select u from users u where u.username = '%s'", username), UserEntity.class)
+            return Optional.of((UserEntity)
+                    em.createNativeQuery(String.format("select * from users u where u.username = '%s'", username), UserEntity.class)
                             .getSingleResult()
             ).map(UserMapper::toUserDto);
         } catch (final NoResultException e) {
