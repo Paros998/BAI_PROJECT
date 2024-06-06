@@ -25,7 +25,7 @@ public class FilesHelper {
         }
     }
 
-    public File savePartsToTempFile(final List<EntityPart> parts) {
+    public File savePartsToTempFile(final @NonNull List<EntityPart> parts) {
         if (parts.isEmpty()) {
             throw BusinessExceptionFactory.forMessage("Error during file operations. No parts provided");
         }
