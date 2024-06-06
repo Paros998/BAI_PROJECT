@@ -4,7 +4,6 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.EntityPart;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import lombok.NonNull;
@@ -13,6 +12,7 @@ import org.bai.security.library.rest.helper.FileService;
 import org.bai.security.library.rest.helper.FilesHelper;
 import org.bai.security.library.security.permission.checker.AppPermissionChecker;
 import org.bai.security.library.security.permission.checker.PermissionChecker;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 
 import java.io.File;
 import java.util.List;
@@ -54,7 +54,7 @@ public class FilesController {
     @Consumes(value = MediaType.MULTIPART_FORM_DATA)
     @Produces(value = MediaType.APPLICATION_JSON)
     @RolesAllowed({"ADMIN", "USER"})
-    public UUID uploadFile(final List<EntityPart> parts) {
+    public UUID uploadFile(final List<FormDataBodyPart> parts) {
         userPermissionChecker.check();
         final File file = filesHelper.savePartsToTempFile(parts);
         return fileRepository.saveFile(file);

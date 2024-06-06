@@ -1,10 +1,10 @@
 package org.bai.security.library.rest.helper;
 
-import jakarta.ws.rs.core.EntityPart;
 import lombok.NonNull;
 import org.bai.security.library.business.BusinessExceptionFactory;
 import org.bai.security.library.common.exception.FileServiceException;
 import org.bai.security.library.common.properties.AppProperties;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -25,7 +25,7 @@ public class FilesHelper {
         }
     }
 
-    public File savePartsToTempFile(final @NonNull List<EntityPart> parts) {
+    public File savePartsToTempFile(final @NonNull List<FormDataBodyPart> parts) {
         if (parts.isEmpty()) {
             throw BusinessExceptionFactory.forMessage("Error during file operations. No parts provided");
         }
