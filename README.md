@@ -12,3 +12,9 @@ Load mvn dependencies and build application with `mvn clean install`.
 Configure own database for postgresql in persistence.xml - Mainly `PLACEHODLER` values or even `hibernate.connection.url` property.
 
 Run LibraryEE :)
+
+Security failures to implement:
+SQL injection
+XSS
+Privileges escalation
+Path traversal
