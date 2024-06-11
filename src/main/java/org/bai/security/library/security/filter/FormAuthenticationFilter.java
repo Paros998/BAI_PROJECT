@@ -92,6 +92,8 @@ public class FormAuthenticationFilter implements ContainerRequestFilter {
                         .setSubject(principal.getUsername())
                         .claim("authorities", principal.getRoles())
                         .claim("userId", principal.getId())
+                        .claim("username", principal.getUsername())
+                        .claim("enabled", principal.isEnabled())
                         .setIssuedAt(new Date())
                         .setExpiration(new Date(System.currentTimeMillis() + JwtExpire.ACCESS_TOKEN.getAmount()))
                         .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8)))

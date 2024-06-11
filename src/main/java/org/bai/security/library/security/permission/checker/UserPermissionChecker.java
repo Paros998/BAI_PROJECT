@@ -1,6 +1,7 @@
 package org.bai.security.library.security.permission.checker;
 
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
@@ -14,6 +15,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@ApplicationScoped
 public class UserPermissionChecker implements PermissionChecker {
 
     @RequestScoped
@@ -36,7 +38,7 @@ public class UserPermissionChecker implements PermissionChecker {
 
             Method[] declaredMethods = clazz.getDeclaredMethods();
 
-            for (var m: declaredMethods) {
+            for (var m : declaredMethods) {
                 if (m.getName().equals(callableMethodName)) {
                     calledMethod = m;
                 }
@@ -47,6 +49,11 @@ public class UserPermissionChecker implements PermissionChecker {
             }
 
             RolesAllowed rolesAllowed = calledMethod.getAnnotation(RolesAllowed.class);
+            DisablePermissionChecking disablePermissionChecking = calledMethod.getAnnotation(DisablePermissionChecking.class);
+
+            if (disablePermissionChecking != null) {
+                return;
+            }
 
             if (rolesAllowed != null) {
                 Set<String> rolesNeeded = Arrays.stream(rolesAllowed.value()).collect(Collectors.toSet());
@@ -70,7 +77,13 @@ public class UserPermissionChecker implements PermissionChecker {
                                     .build()
                     );
                 }
-
+            } else {
+                throw new WebApplicationException(
+                        Response.status(
+                                        HttpStatusError.FORBIDDEN.status(),
+                                        "Endpoint not properly annotated with @RolesAllowed or @DisablePermissionChecking annotation.")
+                                .build()
+                );
             }
         } catch (final WebApplicationException e) {
             throw e;

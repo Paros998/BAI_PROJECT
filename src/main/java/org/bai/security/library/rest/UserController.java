@@ -11,7 +11,7 @@ import org.bai.security.library.api.users.UserDto;
 import org.bai.security.library.business.BusinessExceptionFactory;
 import org.bai.security.library.domain.user.UserRepository;
 import org.bai.security.library.entity.user.repository.UserEntityRepository;
-import org.bai.security.library.security.permission.checker.AppPermissionChecker;
+import org.bai.security.library.security.permission.checker.DisablePermissionChecking;
 import org.bai.security.library.security.permission.checker.PermissionChecker;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class UserController {
 
     @Inject
     public UserController(final @UserEntityRepository UserRepository userRepository,
-                          final @AppPermissionChecker PermissionChecker permissionChecker) {
+                          final PermissionChecker permissionChecker) {
         this.userRepository = userRepository;
         this.userPermissionChecker = permissionChecker;
     }
@@ -62,6 +62,7 @@ public class UserController {
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @DisablePermissionChecking
     public UUID register(final @NonNull @Valid RegisterRequest request) {
         return userRepository.registerUser(request);
     }

@@ -6,7 +6,6 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.lang.Strings;
 import io.jsonwebtoken.security.Keys;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.Response;
@@ -18,14 +17,10 @@ import org.bai.security.library.security.context.UserPrincipal;
 import org.bai.security.library.security.context.UserSecurityContext;
 
 import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Slf4j
-@ApplicationScoped
-public class JwtAuthenticationFilter implements ContainerRequestFilter {
+public abstract class JwtAuthenticationFilter implements ContainerRequestFilter {
     private static final String JWT_SCHEME = "JWT";
 
     @Override
@@ -41,12 +36,7 @@ public class JwtAuthenticationFilter implements ContainerRequestFilter {
                         .parseClaimsJws(token);
                 final Claims body = claimsJws.getBody();
 
-                final String userId = (String) body.get("userId");
-                final String username = body.getSubject();
-
-                final Set<String> authorities = new HashSet<>((List<String>) body.get("authorities"));
-
-                final UserPrincipal principal = new UserPrincipal(userId, username, true, authorities);
+                final UserPrincipal principal = getUserPrincipal(body);
 
                 final var context = UserSecurityContext.builder()
                         .principal(principal)
@@ -68,4 +58,6 @@ public class JwtAuthenticationFilter implements ContainerRequestFilter {
             }
         }
     }
+
+    protected abstract UserPrincipal getUserPrincipal(final Claims body);
 }

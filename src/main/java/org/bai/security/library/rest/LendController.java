@@ -6,7 +6,6 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.bai.security.library.api.lends.LendDto;
 import org.bai.security.library.domain.lend.LendRepository;
-import org.bai.security.library.security.permission.checker.AppPermissionChecker;
 import org.bai.security.library.security.permission.checker.PermissionChecker;
 
 import java.util.List;
@@ -19,7 +18,7 @@ public class LendController {
 
     @Inject
     public LendController(final LendRepository lendRepository,
-                          final @AppPermissionChecker PermissionChecker userPermissionChecker) {
+                          final PermissionChecker userPermissionChecker) {
         this.lendRepository = lendRepository;
         this.userPermissionChecker = userPermissionChecker;
     }
