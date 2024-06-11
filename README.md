@@ -13,10 +13,10 @@ Configure own database for postgresql in persistence.xml - Mainly `PLACEHODLER` 
 
 Run LibraryEE :)
 
-Security failures to implement:
-SQL injection
-XSS
-Privileges escalation
+Security failures to implement: 
+SQL injection, 
+XSS, 
+Privileges escalation, 
 Path traversal
 
 SQL injection example as username in login:
