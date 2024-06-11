@@ -1,4 +1,4 @@
-package org.bai.security.library.security.jwt;
+package org.bai.security.library.security.jwt.parser;
 
 import io.jsonwebtoken.Claims;
 import jakarta.inject.Inject;
@@ -6,20 +6,19 @@ import org.bai.security.library.domain.user.UserRepository;
 import org.bai.security.library.entity.user.UserEntity;
 import org.bai.security.library.entity.user.repository.UserEntityRepository;
 import org.bai.security.library.security.context.UserPrincipal;
-import org.bai.security.library.security.filter.JwtAuthenticationFilter;
 
 import java.util.*;
 
-public class JwtAuthenticationFilterSafe extends JwtAuthenticationFilter {
+public class JwtBodyParserServiceSafe implements JwtBodyParserService {
     private final UserRepository userEntityRepository;
 
     @Inject
-    public JwtAuthenticationFilterSafe(final @UserEntityRepository UserRepository userEntityRepository) {
+    public JwtBodyParserServiceSafe(final @UserEntityRepository UserRepository userEntityRepository) {
         this.userEntityRepository = userEntityRepository;
     }
 
     @Override
-    protected UserPrincipal getUserPrincipal(final Claims body) {
+    public UserPrincipal getUserPrincipal(final Claims body) {
         final String userId = (String) body.get("userId");
 
         Optional<UserEntity> user = userEntityRepository.findEntityById(UUID.fromString(userId));
