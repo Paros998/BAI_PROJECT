@@ -8,7 +8,6 @@ import lombok.NonNull;
 import org.bai.security.library.api.stocks.AddBookStockDto;
 import org.bai.security.library.api.stocks.BookStockDto;
 import org.bai.security.library.domain.stock.BookStockRepository;
-import org.bai.security.library.security.permission.checker.AppPermissionChecker;
 import org.bai.security.library.security.permission.checker.PermissionChecker;
 
 import java.util.List;
@@ -19,10 +18,9 @@ public class BookStockController {
     private final BookStockRepository bookStockRepository;
     private final PermissionChecker userPermissionChecker;
 
-
     @Inject
     public BookStockController(final BookStockRepository bookStockRepository,
-                               final @AppPermissionChecker PermissionChecker userPermissionChecker) {
+                               final PermissionChecker userPermissionChecker) {
         this.bookStockRepository = bookStockRepository;
         this.userPermissionChecker = userPermissionChecker;
     }

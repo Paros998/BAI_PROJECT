@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.lang.Strings;
 import io.jsonwebtoken.security.Keys;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.Response;
@@ -16,17 +17,23 @@ import org.bai.security.library.api.common.HttpStatusError;
 import org.bai.security.library.common.properties.AppProperties;
 import org.bai.security.library.security.context.UserPrincipal;
 import org.bai.security.library.security.context.UserSecurityContext;
+import org.bai.security.library.security.jwt.parser.JwtBodyParser;
+import org.bai.security.library.security.jwt.parser.JwtBodyParserService;
 
 import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Slf4j
 @ApplicationScoped
 public class JwtAuthenticationFilter implements ContainerRequestFilter {
     private static final String JWT_SCHEME = "JWT";
+
+    private final JwtBodyParserService bodyParserService;
+
+    @Inject
+    public JwtAuthenticationFilter(final @JwtBodyParser JwtBodyParserService bodyParserService) {
+        this.bodyParserService = bodyParserService;
+    }
 
     @Override
     public void filter(final @NonNull ContainerRequestContext requestContext) {
@@ -41,12 +48,7 @@ public class JwtAuthenticationFilter implements ContainerRequestFilter {
                         .parseClaimsJws(token);
                 final Claims body = claimsJws.getBody();
 
-                final String userId = (String) body.get("userId");
-                final String username = body.getSubject();
-
-                final Set<String> authorities = new HashSet<>((List<String>) body.get("authorities"));
-
-                final UserPrincipal principal = new UserPrincipal(userId, username, true, authorities);
+                final UserPrincipal principal = bodyParserService.getUserPrincipal(body);
 
                 final var context = UserSecurityContext.builder()
                         .principal(principal)
@@ -57,14 +59,19 @@ public class JwtAuthenticationFilter implements ContainerRequestFilter {
                 requestContext.setSecurityContext(context);
 
             } catch (final ExpiredJwtException e) {
-                log.error("error", e);
+                log.error("Token {} has expired, error", token, e);
                 requestContext.abortWith(Response
                         .status(HttpStatusError.FORBIDDEN.status())
                         .entity(HttpStatusError.FORBIDDEN.msg())
                         .build()
                 );
             } catch (final Exception e) {
-                throw new IllegalStateException(String.format("Token %s cannot be trusted", token));
+                log.error("Token {} cannot be trusted, error", token, e);
+                requestContext.abortWith(Response
+                        .status(HttpStatusError.SECURITY_TOKEN_UNTRUSTED.status())
+                        .entity(HttpStatusError.SECURITY_TOKEN_UNTRUSTED.msg())
+                        .build()
+                );
             }
         }
     }

@@ -10,7 +10,7 @@ import lombok.NonNull;
 import org.bai.security.library.domain.files.FileRepository;
 import org.bai.security.library.rest.helper.FileService;
 import org.bai.security.library.rest.helper.FilesHelper;
-import org.bai.security.library.security.permission.checker.AppPermissionChecker;
+import org.bai.security.library.security.permission.checker.DisablePermissionChecking;
 import org.bai.security.library.security.permission.checker.PermissionChecker;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 
@@ -31,7 +31,7 @@ public class FilesController {
     @Inject
     public FilesController(final FileRepository fileRepository,
                            final @FileService FilesHelper filesHelper,
-                           final @AppPermissionChecker PermissionChecker userPermissionChecker) {
+                           final PermissionChecker userPermissionChecker) {
         this.fileRepository = fileRepository;
         this.filesHelper = filesHelper;
         this.userPermissionChecker = userPermissionChecker;
@@ -40,7 +40,7 @@ public class FilesController {
     @GET
     @Path("/{fileId}")
     @Produces(value = MediaType.APPLICATION_OCTET_STREAM)
-    @RolesAllowed({"ADMIN", "USER"})
+    @DisablePermissionChecking
     public Response downloadFile(final @NonNull @PathParam("fileId") UUID fileId) {
         userPermissionChecker.check();
         final var file = fileRepository.getFile(fileId);

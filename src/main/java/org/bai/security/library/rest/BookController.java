@@ -10,7 +10,6 @@ import org.bai.security.library.api.books.AddBookDto;
 import org.bai.security.library.api.books.BookDto;
 import org.bai.security.library.business.BusinessExceptionFactory;
 import org.bai.security.library.domain.book.BookRepository;
-import org.bai.security.library.security.permission.checker.AppPermissionChecker;
 import org.bai.security.library.security.permission.checker.PermissionChecker;
 
 import java.util.List;
@@ -23,7 +22,7 @@ public class BookController {
 
     @Inject
     public BookController(final BookRepository bookRepository,
-                          final @AppPermissionChecker PermissionChecker permissionChecker) {
+                          final PermissionChecker permissionChecker) {
         this.bookRepository = bookRepository;
         this.userPermissionChecker = permissionChecker;
     }
